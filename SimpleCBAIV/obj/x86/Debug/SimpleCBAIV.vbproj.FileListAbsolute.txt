@@ -1,0 +1,11 @@
+C:\WMR Projects\SimpleCBAIV\SimpleCBAIV\bin\Debug\SimpleCBAIV.exe
+C:\WMR Projects\SimpleCBAIV\SimpleCBAIV\bin\Debug\SimpleCBAIV.pdb
+C:\WMR Projects\SimpleCBAIV\SimpleCBAIV\bin\Debug\SimpleCBAIV.xml
+C:\WMR Projects\SimpleCBAIV\SimpleCBAIV\obj\x86\Debug\ResolveAssemblyReference.cache
+C:\WMR Projects\SimpleCBAIV\SimpleCBAIV\obj\x86\Debug\SimpleCBAIV.frmMain.resources
+C:\WMR Projects\SimpleCBAIV\SimpleCBAIV\obj\x86\Debug\SimpleCBAIV.Resources.resources
+C:\WMR Projects\SimpleCBAIV\SimpleCBAIV\obj\x86\Debug\GenerateResource-ResGen.read.1.tlog
+C:\WMR Projects\SimpleCBAIV\SimpleCBAIV\obj\x86\Debug\GenerateResource-ResGen.write.1.tlog
+C:\WMR Projects\SimpleCBAIV\SimpleCBAIV\obj\x86\Debug\SimpleCBAIV.exe
+C:\WMR Projects\SimpleCBAIV\SimpleCBAIV\obj\x86\Debug\SimpleCBAIV.xml
+C:\WMR Projects\SimpleCBAIV\SimpleCBAIV\obj\x86\Debug\SimpleCBAIV.pdb

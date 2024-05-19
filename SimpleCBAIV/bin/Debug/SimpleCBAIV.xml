@@ -1,0 +1,560 @@
+﻿<?xml version="1.0"?>
+<doc>
+<assembly>
+<name>
+SimpleCBAIV
+</name>
+</assembly>
+<members>
+<member name="F:SimpleCBAIV.MPFunctions.EP1OUTHandle">
+	<summary>
+ Outgoing usb handle
+ </summary>
+</member><member name="F:SimpleCBAIV.MPFunctions.EP1INHandle">
+	<summary>
+ Incoming USB handle
+ </summary>
+</member><member name="F:SimpleCBAIV.MPFunctions.attached">
+	<summary>
+ True -&gt; Device attached, False -&gt; Device not attached
+ </summary>
+</member><member name="M:SimpleCBAIV.MPFunctions._MPUSBOpen(System.Int32,System.String,System.String,System.Int32,System.Int32)">
+	<summary>
+ Opens the identified device
+ </summary>
+	<param name="instance">an instance number of the device to open. 
+ Number of instances is indicated by the getDeviceCount call</param>
+	<param name="pVID_PID">PID and VID to indicate type of target device</param>
+	<param name="pEP">String of the endpoint number on the target endpoint to open</param>
+	<param name="dwDir">Specifies the direction of the endpoint</param>
+	<param name="dwReserved">Reserved for future use</param>
+	<returns>handle for the opened device</returns>
+</member><member name="M:SimpleCBAIV.MPFunctions._MPUSBGetDeviceCount(System.String)">
+	<summary>
+ Get the count of devices with the given pVID_PID
+ </summary>
+	<param name="pVID_PID">PID and VID to indicate type of target device</param>
+	<returns>count of devices with that pVID_PID. This is the number of instances</returns>
+</member><member name="M:SimpleCBAIV.MPFunctions._MPUSBClose(System.IntPtr)">
+	<summary>
+ Close the connection with the device with the given handle
+ </summary>
+	<param name="handle">Handle identifier for the device to be closed</param>
+	<returns>True =&gt; Successful</returns>
+</member><member name="M:SimpleCBAIV.MPFunctions._MPUSBRead(System.IntPtr,System.Byte[],System.Int32,System.UInt32[],System.Int32)">
+	<summary>
+ Read up to a given number of bytes from the buffer
+ </summary>
+	<param name="handle">Handle indicating the device</param>
+	<param name="pData">Data pointer (byte[]) to store the data as it is copied from the buffer</param>
+	<param name="dwLen">Maximum number of bytes to read</param>
+	<param name="pLength">response value for bytes read</param>
+	<param name="dwMilliseconds">Timeout value, in milliseconds</param>
+	<returns>data read -&gt; pData
+ bytes read(count) -&gt; pLength
+ pass =&gt; 1, fail =&gt; 0</returns>
+</member><member name="M:SimpleCBAIV.MPFunctions._MPUSBWrite(System.IntPtr,System.Byte[],System.Int32,System.UInt32[],System.Int32)">
+	<summary>
+ Write a given packet to the device
+ </summary>
+	<param name="handle">Handle indicating the device</param>
+	<param name="pData">Data pointer (byte[]) to read the data from as it is copied to the buffer</param>
+	<param name="dwLen">number of bytes to read</param>
+	<param name="pLength">points to the number of bytes written by this function call (byte[])</param>
+	<param name="dwMilliseconds">time-out interval, in milliseconds</param>
+	<returns>pass =&gt; 1, fail =&gt; 0</returns>
+</member><member name="M:SimpleCBAIV.MPFunctions._MPUSBGetDeviceDescriptor(System.IntPtr,System.Byte[],System.UInt32,System.UInt32[])">
+	<summary>
+ Returns the Device Descriptor Data
+ </summary>
+	<param name="handle"> Identifies the endpoint pipe to be read. The pipe handle must
+ have been created with MP_READ access attribute. </param>
+	<param name="pDevDsc">pointer (byte array) to where the resulting descriptor should be copied.</param>
+	<param name="dwLen"></param>
+	<param name="pLength"></param>
+	<returns>pass =&gt; 1, fail =&gt; 0</returns>
+</member><member name="M:SimpleCBAIV.MPFunctions._MPUSBGetConfigurationDescriptor(System.IntPtr,System.Char,System.Byte[],System.UInt32,System.UInt32[])">
+	<summary>
+ Returns the Configuration Descriptor
+ </summary>
+	<param name="handle">Identifies the endpoint pipe to be read. The pipe handle must
+ have been created with MP_READ access attribute.</param>
+	<param name="bIndex">the index of the configuration descriptor desired.  Valid input
+ range is 1 - 255.</param>
+	<param name="pDevDsc">pointer to where the resulting descriptor should be copied.</param>
+	<param name="dwLen">the available data in the pDevDsc buffer</param>
+	<param name="pLength">a pointer to a DWORD that will be updated with the amount of data 
+ actually written to the pDevDsc buffer.  This number will be less than or equal to dwLen.</param>
+	<returns>pass =&gt; 1, fail =&gt; 0</returns>
+</member><member name="M:SimpleCBAIV.MPFunctions._MPUSBGetStringDescriptor(System.IntPtr,System.Char,System.UInt16,System.String,System.UInt32,System.UInt32[])">
+	<summary>
+ Returns the requested string descriptor
+ </summary>
+	<param name="handle">Identifies the endpoint pipe to be read. The pipe handle must
+ have been created with MP_READ access attribute.</param>
+	<param name="bIndex">the index of the configuration descriptor desired.  Valid input
+ range is 0 - 255.</param>
+	<param name="wLangId">the language ID of the string that needs to be read</param>
+	<param name="pDevDsc">pointer to where the resulting descriptor should be copied.</param>
+	<param name="dwLen">the available data in the pDevDsc buffer</param>
+	<param name="pLength">a pointer to a DWORD that will be updated with the amount of data
+ actually written to the pDevDsc buffer.  This number will be
+ less than or equal to dwLen.</param>
+	<returns>pass =&gt; 1, fail =&gt; 0</returns>
+</member><member name="F:SimpleCBAIV.MPUSBEngine.pEP">
+	<summary>
+ Driver ID
+ </summary>
+</member><member name="F:SimpleCBAIV.MPUSBEngine.Pos_Fan_LED_On">
+	<summary>
+ Only used on the data from the CBA device
+ </summary>
+</member><member name="F:SimpleCBAIV.MPUSBEngine.m_tmrRead">
+	<summary>
+ timer to track the data from the device
+ </summary>
+</member><member name="F:SimpleCBAIV.MPUSBEngine.m_Load">
+	<summary>
+ desired current, to be sent to the device, microamps
+ Load * 10^(-6) = amps
+ </summary>
+</member><member name="F:SimpleCBAIV.MPUSBEngine.m_Detect">
+	<summary>
+ Detected from the unit, microamps
+ Detect * 10^(-6) = amps
+ </summary>
+</member><member name="F:SimpleCBAIV.MPUSBEngine.m_Voltage">
+	<summary>
+ Detected from the unit, microvolts
+ voltage * 10^(-6) = volts
+ </summary>
+</member><member name="F:SimpleCBAIV.MPUSBEngine.m_parent">
+	<summary>
+ Used to update the form
+ </summary>
+</member><member name="F:SimpleCBAIV.MPUSBEngine.m_serialNumber">
+	<summary>
+ Represents the device's serial number
+ </summary>
+</member><member name="P:SimpleCBAIV.MPUSBEngine.LED1_on">
+	<summary>
+ True = on, False = off
+ </summary>
+</member><member name="P:SimpleCBAIV.MPUSBEngine.LED2_on">
+	<summary>
+ True = on, False = off
+ </summary>
+</member><member name="P:SimpleCBAIV.MPUSBEngine.Fan_on">
+	<summary>
+ True = on, False = off
+ </summary>
+</member><member name="P:SimpleCBAIV.MPUSBEngine.Voltage">
+	<summary>
+ Voltage apparent to the CBA
+ </summary>
+</member><member name="P:SimpleCBAIV.MPUSBEngine.Detect">
+	<summary>
+ Load the CBA reads
+ </summary>
+</member><member name="P:SimpleCBAIV.MPUSBEngine.Load">
+	<summary>
+ Intended load for the CBA
+ </summary>
+</member><member name="P:SimpleCBAIV.MPUSBEngine.Connected">
+	<summary>
+ Returns whether or not the device is connected via the MPLab USB driver
+ </summary>
+</member><member name="P:SimpleCBAIV.MPUSBEngine.SerialNumber">
+	<summary>
+ represents the CBA's serial number
+ </summary>
+</member><member name="M:SimpleCBAIV.MPUSBEngine.m_tmrRead_Tick(System.Object,System.EventArgs)">
+	<summary>
+ m_tmrRead's tick event
+ reads the most recent packet, and adjusts the data to match.
+ </summary>
+	<param name="sender"></param>
+	<param name="e"></param>
+</member><member name="M:SimpleCBAIV.MPUSBEngine.TICK">
+	<summary>
+ Force a timer tick event
+ </summary>
+</member><member name="M:SimpleCBAIV.MPUSBEngine.dataUpdate">
+	<summary>
+ reads the most recent data packet, and changes the data to match
+ </summary>
+</member><member name="M:SimpleCBAIV.MPUSBEngine.readBulkData(System.Byte,System.Byte)">
+	<summary>
+ primarily used when an ack is expected.
+ </summary>
+	<param name="Type">type of message detected</param>
+	<param name="size">number of bytes expected</param>
+	<returns>message if type is correct. Empty set id the type is not correct</returns>
+</member><member name="M:SimpleCBAIV.MPUSBEngine.writeBulkData(System.Byte[])">
+	<summary>
+ Sends the given Byte array to the CBA device
+ </summary>
+	<param name="bulkData"></param>
+	<returns></returns>
+</member><member name="M:SimpleCBAIV.MPUSBEngine.Connect">
+	<summary>
+ Uses the Microchip driver to connect to the USB board.
+ </summary>
+</member><member name="M:SimpleCBAIV.MPUSBEngine.SendSetStatus(System.Boolean,System.Boolean,System.UInt32,System.Byte,System.Byte,System.Byte,System.Byte,System.Byte,System.Boolean,System.UInt32)">
+	<summary>
+ Sends the device a status command based on passed-in information
+ </summary>
+	<param name="UpdateTest">True = update TestRun and Load, False = do not update</param>
+	<param name="TestRun">True = run, false = stop</param>
+	<param name="load">Desired current in microamps</param>
+	<param name="fan"></param>
+	<param name="LED1"></param>
+	<param name="LED2"></param>
+	<returns></returns>
+</member><member name="M:SimpleCBAIV.MPUSBEngine.sendGetRawSensorValue">
+	<summary>
+ gets the raw senesor values
+ </summary>
+	<returns></returns>
+</member><member name="M:SimpleCBAIV.MPUSBEngine.sendBootloaderFragment(System.Byte[])">
+	<summary>
+ Sends the bootloader fragment sent in the argument
+ </summary>
+	<param name="Fragment">Bootloader Fragment, broken into bytes.</param>
+	<returns>false if message too big or other message error</returns>
+</member><member name="M:SimpleCBAIV.MPUSBEngine.SendResetCalibration">
+	<summary>
+ Sends the command to reset the calibration values on the CBA. use only in case of emergency.
+ </summary>
+</member><member name="P:SimpleCBAIV.My.Resources.Resources.ResourceManager">
+	<summary>
+  Returns the cached ResourceManager instance used by this class.
+</summary>
+</member><member name="P:SimpleCBAIV.My.Resources.Resources.Culture">
+	<summary>
+  Overrides the current thread's CurrentUICulture property for all
+  resource lookups using this strongly typed resource class.
+</summary>
+</member><member name="T:SimpleCBAIV.My.Resources.Resources">
+	<summary>
+  A strongly-typed resource class, for looking up localized strings, etc.
+</summary>
+</member><member name="M:SimpleCBAIV.CBADevice.CBAIVPacket.FromBytes(System.Byte[])">
+	<summary>
+ Returns an instance of a child of CBAIVPacket, 
+ depending on the data packet.
+ </summary>
+	<param name="packet">byte data from device.</param>
+	<returns>A new instance of a child of CBAIVPacket.</returns>
+</member><member name="F:SimpleCBAIV.CBADevice.CBAIVPacketSetStatus.Pos_Fan_LED_On">
+	<summary>
+ Only used on the data from the CBA device
+ </summary>
+</member><member name="M:SimpleCBAIV.CBADevice.CBAIVPacketSetStatus.#ctor(System.UInt16,System.UInt32,SimpleCBAIV.CBADevice.CBAIVPacketSetStatus.FanLEDControl,SimpleCBAIV.CBADevice.CBAIVPacketSetStatus.FanLEDControl,SimpleCBAIV.CBADevice.CBAIVPacketSetStatus.FanLEDControl,System.Byte,System.Byte,System.UInt32)">
+	<summary>
+ Constructor for the packet from the individual values
+ </summary>
+	<param name="Flags">Flags bytes</param>
+	<param name="Load">Load, in microAmps</param>
+	<param name="Fan">Fan control byte</param>
+	<param name="LED1">LED1 control byte</param>
+	<param name="LED2">LED2 control byte</param>
+	<param name="IOTRIS">IOTRIS control byte</param>
+	<param name="IOPORT">IOPORT values</param>
+</member><member name="P:SimpleCBAIV.CBADevice.CBAIVPacketSetStatus.Load">
+	<summary>
+ The desired current draw, in microamps
+ </summary>
+</member><member name="P:SimpleCBAIV.CBADevice.CBAIVPacketSetStatus.Fan">
+	<summary>
+ Desired fan setting
+ </summary>
+</member><member name="P:SimpleCBAIV.CBADevice.CBAIVPacketSetStatus.LED1">
+	<summary>
+ Desired LED1 setting
+ </summary>
+</member><member name="P:SimpleCBAIV.CBADevice.CBAIVPacketSetStatus.LED2">
+	<summary>
+ Desired LED2 setting
+ </summary>
+</member><member name="P:SimpleCBAIV.CBADevice.CBAIVPacketSetStatus.IOTRIS">
+	<summary>
+ Controls the input/output direction of the general purpose IO pins
+ </summary>
+</member><member name="P:SimpleCBAIV.CBADevice.CBAIVPacketSetStatus.IOPORT">
+	<summary>
+ Controls the new output state if the bit is in output mode
+ </summary>
+</member><member name="M:SimpleCBAIV.CBADevice.CBAIVPacketSetStatus.DbgString(System.String)">
+	<summary>
+ Generates a String that can be used for debugging purposes
+ </summary>
+	<param name="separator">character(s) to be put between values</param>
+	<returns>string describing the packet</returns>
+</member><member name="F:SimpleCBAIV.CBADevice.CBAIVPacketSendStatus.Pos_Fan_LED_On">
+	<summary>
+ Only used on the data from the CBA device
+ </summary>
+</member><member name="M:SimpleCBAIV.CBADevice.CBAIVPacketSendStatus.#ctor(System.UInt16,System.UInt32,SimpleCBAIV.CBADevice.CBAIVPacketSendStatus.FanLEDControl,SimpleCBAIV.CBADevice.CBAIVPacketSendStatus.FanLEDControl,SimpleCBAIV.CBADevice.CBAIVPacketSendStatus.FanLEDControl,System.Byte,System.Byte,System.UInt16,System.UInt16,System.UInt32,System.UInt32,System.UInt32,System.UInt32)">
+	<summary>
+ Creates the packet object from values for each data value.
+ </summary>
+	<param name="Flags">Flags byte</param>
+	<param name="Load">Load, in microamps</param>
+	<param name="Fan">Fan control, as defined in the enum</param>
+	<param name="LED1">LED control, as defined in the enum</param>
+	<param name="LED2">LED  control, as defined in the enum</param>
+	<param name="IOTRIS">IO direction of the pins</param>
+	<param name="IOPORT">Value to be output on the pins</param>
+	<param name="Ext_Temp">Temperature read in from external probe</param>
+	<param name="Int_Temp">Temperature read from internal probe</param>
+	<param name="Detect">Current detected on the CBA</param>
+	<param name="Voltage">Voltage detected on the CBA</param>
+</member><member name="M:SimpleCBAIV.CBADevice.CBAIVPacketSendStatus.DbgString(System.String)">
+	<summary>
+ Generates a String that can be used for debugging purposes
+ </summary>
+	<param name="separator">character(s) to be put between values</param>
+	<returns>string describing the packet</returns>
+</member><member name="P:SimpleCBAIV.CBADevice.CBAIVPacketSendStatus.Load">
+	<summary>
+ The desired current draw, in microamps
+ </summary>
+</member><member name="P:SimpleCBAIV.CBADevice.CBAIVPacketSendStatus.Fan">
+	<summary>
+ Desired fan setting
+ </summary>
+</member><member name="P:SimpleCBAIV.CBADevice.CBAIVPacketSendStatus.LED1">
+	<summary>
+ Desired LED1 setting
+ </summary>
+</member><member name="P:SimpleCBAIV.CBADevice.CBAIVPacketSendStatus.LED2">
+	<summary>
+ Desired LED2 setting
+ </summary>
+</member><member name="P:SimpleCBAIV.CBADevice.CBAIVPacketSendStatus.IOTRIS">
+	<summary>
+ Controls the input/output direction of the general purpose IO pins
+ </summary>
+</member><member name="P:SimpleCBAIV.CBADevice.CBAIVPacketSendStatus.IOPORT">
+	<summary>
+ Controls the new output state if the bit is in output mode
+ </summary>
+</member><member name="P:SimpleCBAIV.CBADevice.CBAIVPacketSendStatus.INT_TEMP">
+	<summary>
+ Stores the internal temperature of the CBAIV
+ </summary>
+</member><member name="P:SimpleCBAIV.CBADevice.CBAIVPacketSendStatus.EXT_TEMP">
+	<summary>
+ Stores the Temperature from the add-on temp probe
+ </summary>
+</member><member name="P:SimpleCBAIV.CBADevice.CBAIVPacketSendStatus.DETECT">
+	<summary>
+ Current detected on the CBA, microamps
+ </summary>
+</member><member name="P:SimpleCBAIV.CBADevice.CBAIVPacketSendStatus.VOLTAGE">
+	<summary>
+ Voltage detected on the CBA, microvolts
+ </summary>
+</member><member name="M:SimpleCBAIV.CBADevice.CBAIVPacketCalibratePosition.#ctor(System.Byte,System.UInt32)">
+	<summary>
+ Builds a calibratePositionPacket from the data values
+ </summary>
+	<param name="IDX">IDX, 
+ 0-4.5V      -&gt;  0
+ 4.5-15V     -&gt;  1
+ 15-60V      -&gt;  2
+ Fine PWM 1  -&gt;  3
+ Fine PWM 2  -&gt;  4
+ Coarse PWM 1-&gt;  5
+ Coarse PWM 2-&gt;  6</param>
+	<param name="Value">Value, Real value of this position as read by the DMM</param>
+</member><member name="M:SimpleCBAIV.CBADevice.CBAIVPacketCalibratePosition.ToByteArray">
+	<summary>
+ generates the byte array representing the packet
+ </summary>
+	<returns>byte array representing the packet</returns>
+</member><member name="P:SimpleCBAIV.CBADevice.CBAIVPacketCalibratePosition.IDX">
+	<summary>
+ IDX for the load calibration
+ </summary>
+</member><member name="P:SimpleCBAIV.CBADevice.CBAIVPacketCalibratePosition.Value">
+	<summary>
+ Value for the load calibration
+ </summary>
+</member><member name="M:SimpleCBAIV.CBADevice.CBAIVPacketCalibratePosition.DbgString(System.String)">
+	<summary>
+ Debug string
+ </summary>
+	<param name="delimiter">String or character to put between values</param>
+	<returns>debug string</returns>
+</member><member name="M:SimpleCBAIV.CBADevice.CBAIVPacketAck.#ctor(System.Byte[])">
+	<summary>
+ Constructor from the byte array representing the packet
+ </summary>
+	<param name="packet">Full Packet</param>
+</member><member name="P:SimpleCBAIV.CBADevice.CBAIVPacketAck.Payload">
+	<summary>
+ Message being acked
+ </summary>
+</member><member name="M:SimpleCBAIV.CBADevice.CBAIVPacketSendConfig.#ctor(System.Byte,System.Byte,System.Byte,System.UInt32,System.UInt32,System.UInt32)">
+	<summary>
+ Constructor from base values
+ </summary>
+	<param name="HW_VER">Hardware Version</param>
+	<param name="FW_VER_MAJ">Major Firmware version</param>
+	<param name="FW_VER_MIN">Minor Firmware Version</param>
+	<param name="SerialNumber">Serial number for the device</param>
+	<param name="MAX_LOAD">Maximum load for the device, microamps</param>
+	<param name="MIN_LOAD">minimum load for the device, microamps</param>
+</member><member name="M:SimpleCBAIV.CBADevice.CBAIVPacketSendConfig.DbgString(System.String)">
+	<summary>
+ Generates a String that can be used for debugging purposes
+ </summary>
+	<param name="separator">character(s) to be put between values</param>
+	<returns>string describing the packet</returns>
+</member><member name="P:SimpleCBAIV.CBADevice.CBAIVPacketSendConfig.FW_VER_MAJ">
+	<summary>
+ Major Firmware version
+ </summary>
+</member><member name="P:SimpleCBAIV.CBADevice.CBAIVPacketSendConfig.FE_VER_MIN">
+	<summary>
+ Minor firmware version
+ </summary>
+</member><member name="P:SimpleCBAIV.CBADevice.CBAIVPacketSendConfig.Serial_Number">
+	<summary>
+ Serial Number for the device
+ </summary>
+</member><member name="P:SimpleCBAIV.CBADevice.CBAIVPacketSendConfig.MAX_Load">
+	<summary>
+ Maximum load
+ </summary>
+</member><member name="P:SimpleCBAIV.CBADevice.CBAIVPacketSendConfig.MIN_Load">
+	<summary>
+ Minimum load
+ </summary>
+</member><member name="M:SimpleCBAIV.CBADevice.CBAIVPacketBootloaderFragment.#ctor(System.Byte[])">
+	<summary>
+ Creates the BootloaderFragment packet from the passed-in array
+ </summary>
+	<param name="packet"></param>
+</member><member name="P:SimpleCBAIV.CBADevice.CBAIVPacketBootloaderFragment.Fragment">
+	<summary>
+ Bootloader Fragment
+ </summary>
+</member><member name="M:SimpleCBAIV.CBADevice.CBAIVPacketResetPic.#ctor">
+	<summary>
+ Makes a packet based on the passed-in array
+ </summary>
+</member><member name="M:SimpleCBAIV.CBADevice.CBAIVPacketResetPic.ToByteArray">
+	<summary>
+ Generates the byte array for the packet
+ </summary>
+	<returns>Byte array for the packet</returns>
+</member><member name="M:SimpleCBAIV.CBADevice.CBAIVRestartBootloader.#ctor">
+	<summary>
+ makes the restartbootloader packet
+ </summary>
+</member><member name="M:SimpleCBAIV.CBADevice.CBAIVRestartBootloader.ToByteArray">
+	<summary>
+ Generates the byte array for the packet
+ </summary>
+	<returns>Byte array for the packet</returns>
+</member><member name="M:SimpleCBAIV.CBADevice.CBAIVPacketSetPWMRaw.#ctor(System.Byte,System.UInt16)">
+	<summary>
+ Creates the packet from the passed-in array
+ </summary>
+	<param name="channel">Channel to be set</param>
+	<param name="duty">Duty value to set the channel to.</param>
+</member><member name="P:SimpleCBAIV.CBADevice.CBAIVPacketSetPWMRaw.Duty">
+	<summary>
+ Duty value to be changed
+ </summary>
+</member><member name="M:SimpleCBAIV.CBADevice.CBADevice.#ctor">
+	<summary>
+ Destructor.
+ </summary>
+</member><member name="M:SimpleCBAIV.CBADevice.CBADevice.Disconnect">
+	<summary>
+ Disconnect from the CBA device.
+ </summary>
+</member><member name="M:SimpleCBAIV.CBADevice.CBADevice.SetTimeouts(System.Int32,System.Int32)">
+	<summary>
+ Set the timeouts for the CBA device.
+ </summary>
+	<param name="ReadTimeout">Read timeout, ms.</param>
+	<param name="WriteTimeout">Write timeout, ms.</param>
+</member><member name="P:SimpleCBAIV.CBADevice.CBADevice.Connected">
+	<summary>
+ True if connected.
+ </summary>
+</member><member name="P:SimpleCBAIV.CBADevice.CBADevice.DeviceIndex">
+	<summary>
+ Device index in devices array.
+ </summary>
+</member><member name="P:SimpleCBAIV.CBADevice.CBADevice.DeviceSerial">
+	<summary>
+ USB serial number.
+ </summary>
+</member><member name="M:SimpleCBAIV.CBADevice.CBADevice.BytesAvailable">
+	<summary>
+ Checks the RX queue for available data.
+ </summary>
+	<returns>true if bytes exist in the RX queue to be read.</returns>
+</member><member name="M:SimpleCBAIV.CBADevice.CBADevice.ReadState">
+	<summary>
+ Read state from the CBA device. Call BytesAvailable() before this
+ to make sure data exists, otherwise this call may block until
+ data is available.
+ </summary>
+	<returns>An object inheriting from CBARpt</returns>
+</member><member name="M:SimpleCBAIV.CBADevice.CBADevice.SetCurrent(System.UInt32)">
+	<summary>
+ Set the current.
+ </summary>
+	<param name="Load">Load.</param>
+</member><member name="M:SimpleCBAIV.CBADevice.CBADevice.SwitchOn(System.Byte)">
+	<summary>
+ Turn an output on.
+ </summary>
+	<param name="SwitchSelect">byte value determining the proper output.</param>
+</member><member name="M:SimpleCBAIV.CBADevice.CBADevice.SwitchOff(System.Byte)">
+	<summary>
+ Turn an output off.
+ </summary>
+	<param name="SwitchSelect">byte value determining the proper output.</param>
+</member><member name="F:SimpleCBAIV.frmMain.Million">
+	<summary>
+ Conversion factor for double values to CBA values.
+ </summary>
+</member><member name="M:SimpleCBAIV.frmMain.RegisterForDeviceNotifications(System.IntPtr)">
+	<summary>
+  Requests to receive a notification when a USB device is attached or removed.
+  </summary>
+	<param name="formHandle"> handle to the window that will receive device events. </param>
+</member><member name="M:SimpleCBAIV.frmMain.RefreshStatus(System.Byte,System.Byte,System.Byte,System.UInt32,System.UInt32,System.UInt32,System.UInt16,System.UInt16,System.Boolean,System.Boolean,System.Boolean,System.Boolean,System.Boolean,System.Byte,System.Byte,System.Boolean,System.Boolean,System.UInt32,System.UInt32,System.Boolean,System.Boolean,System.Boolean,System.Boolean)">
+	<summary>
+ Updates the GUI with the relevant information from the CBA.
+ </summary>
+	<param name="Fan">Command State of the fan</param>
+	<param name="LED1">Command State of the LED 1</param>
+	<param name="LED2">Command State of the LED 2</param>
+	<param name="Load">Intended current draw for the CBA</param>
+	<param name="Detect">Present apparent current draw of the CBA</param>
+	<param name="Voltage">Present voltage apparent to the CBA</param>
+	<param name="fanRunning">true = fan running, false = fan stopped</param>
+	<param name="LED1Lit">true = on, false = off</param>
+	<param name="LED2Lit">true = on, false = off</param>
+	<param name="ChangeTestState">true = change, false = no change</param>
+	<param name="TestRunning">true = running, false = not running</param>
+</member><member name="M:SimpleCBAIV.frmMain.SendWithAck(System.Byte[],System.UInt32,System.UInt32)">
+	<summary>
+ Sends the given message, checking for an acknowledgment
+ </summary>
+	<param name="message"></param>
+	<param name="timeoutMS"></param>
+	<param name="retryMS"></param>
+	<returns></returns>
+</member>
+</members>
+</doc>
